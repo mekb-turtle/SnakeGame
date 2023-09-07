@@ -200,9 +200,15 @@ Public Class SnakeForm
         Game.Advance()
         box.Invalidate()
 
+        UpdateScore()
+
         If Not Game.SnakeAlive Then
             StopGame()
         End If
+    End Sub
+
+    Private Sub UpdateScore()
+        scoreText.Text = "Score: " & (Game.SnakeLength - 1)
     End Sub
 
     Private changeDirectionQueue As New List(Of Direction)
@@ -243,13 +249,13 @@ Public Class SnakeForm
         Select Case keyCode
             Case 27, 13, 80
                 GoTo KeyPause
-            Case 65
+            Case 65, 70, 74
                 dir = Direction.Left
-            Case 87
+            Case 87, 84, 73
                 dir = Direction.Up
-            Case 68
+            Case 68, 72, 76
                 dir = Direction.Right
-            Case 83
+            Case 83, 71, 75
                 dir = Direction.Down
                 Exit Select
             Case Else
@@ -295,21 +301,25 @@ skipAddQueue:
 
     Private firstStarted As Boolean = False
 
-    Private Sub SetMenuVisible(visible As Boolean)
+    Private Sub SetMenuVisible(menu As Boolean)
         resumeButton.Visible = Paused
         resumeButton.Enabled = Paused
         pausedText.Visible = Paused
-        startButton.Visible = Paused Or visible
+        startButton.Visible = Paused Or menu
         startButton.Enabled = startButton.Visible
-        gameOverText.Visible = visible And Not Game.SnakeWin And firstStarted
-        winText.Visible = visible And Game.SnakeWin And firstStarted
-        mainPanel.Visible = visible
-        numericWidth.Enabled = visible
-        numericHeight.Enabled = visible
-        pauseButton.Visible = Not visible And Not Paused
+        gameOverText.Visible = menu And Not Game.SnakeWin And firstStarted
+        winText.Visible = menu And Game.SnakeWin And firstStarted
+        mainPanel.Visible = menu
+        numericWidth.Enabled = menu
+        numericHeight.Enabled = menu
+        pauseButton.Visible = Not menu And Not Paused
         pauseButton.Enabled = pauseButton.Visible
-        If visible Then
+        scoreText.Visible = Not menu
+
+        If menu Then
             startButton.Focus()
+        Else
+            UpdateScore()
         End If
         UpdateButtons()
     End Sub
