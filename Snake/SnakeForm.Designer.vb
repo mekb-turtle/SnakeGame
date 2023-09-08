@@ -24,7 +24,6 @@ Partial Class SnakeForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SnakeForm))
-        Me.box = New System.Windows.Forms.Panel()
         Me.gameTimer = New System.Windows.Forms.Timer(Me.components)
         Me.startButton = New System.Windows.Forms.Button()
         Me.gameOverText = New System.Windows.Forms.Label()
@@ -38,18 +37,12 @@ Partial Class SnakeForm
         Me.pausedText = New System.Windows.Forms.Label()
         Me.pauseButton = New System.Windows.Forms.Button()
         Me.scoreText = New System.Windows.Forms.Label()
+        Me.box = New GraphicsControl()
         Me.mainPanel.SuspendLayout()
         CType(Me.numericHeight, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numericWidth, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.box, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'box
-        '
-        Me.box.BackColor = System.Drawing.Color.Black
-        Me.box.Location = New System.Drawing.Point(104, 72)
-        Me.box.Name = "box"
-        Me.box.Size = New System.Drawing.Size(200, 100)
-        Me.box.TabIndex = 0
         '
         'gameTimer
         '
@@ -193,6 +186,16 @@ Partial Class SnakeForm
         Me.scoreText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.scoreText.Visible = False
         '
+        'box
+        '
+        Me.box.BackColor = System.Drawing.Color.DimGray
+        Me.box.ErrorImage = Nothing
+        Me.box.Location = New System.Drawing.Point(183, 115)
+        Me.box.Name = "box"
+        Me.box.Size = New System.Drawing.Size(100, 50)
+        Me.box.TabIndex = 9
+        Me.box.TabStop = False
+        '
         'SnakeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
@@ -217,12 +220,11 @@ Partial Class SnakeForm
         Me.mainPanel.PerformLayout()
         CType(Me.numericHeight, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numericWidth, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.box, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents box As Panel
     Friend WithEvents gameTimer As Timer
     Friend WithEvents startButton As Button
     Friend WithEvents gameOverText As Label
@@ -236,4 +238,5 @@ Partial Class SnakeForm
     Friend WithEvents pausedText As Label
     Friend WithEvents pauseButton As Button
     Friend WithEvents scoreText As Label
+    Friend WithEvents box As GraphicsControl
 End Class

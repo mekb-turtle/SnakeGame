@@ -1,10 +1,10 @@
-﻿Imports System.Runtime.CompilerServices.RuntimeHelpers
-Imports Snake.SnakeGameUtils
+﻿Imports Snake.SnakeGameUtils
 
 Public Class SnakeForm
     Dim Game As New SnakeGame(16, 16)
 
     Private Sub SnakeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        box.SendToBack()
         numericWidth.Minimum = 4
         numericHeight.Minimum = 4
         numericWidth.Maximum = 32
@@ -77,59 +77,82 @@ Public Class SnakeForm
 
     Private renderScale As Single
 
+    Private bufferGraphics As Graphics
+    Private bufferBitmap As Bitmap
+    Private boxGraphics As Graphics
+
+    Private Sub box_SizeChanged(sender As Object, e As EventArgs) Handles box.SizeChanged
+        bufferGraphics?.Dispose()
+        bufferBitmap?.Dispose()
+        boxGraphics?.Dispose()
+    End Sub
+
     Private Sub box_Paint(sender As Object, e As PaintEventArgs) Handles box.Paint
         Dim marg As Single = CellMargin * renderScale
 
-        Using g As Graphics = box.CreateGraphics()
-            g.Clear(Color.Transparent)
+        If bufferBitmap Is Nothing Then
+            bufferBitmap = New Bitmap(box.ClientSize.Width, box.ClientSize.Height)
+        Else
+            boxGraphics.DrawImage(bufferBitmap, 0, 0)
+        End If
+        If bufferGraphics Is Nothing Then
+            bufferGraphics = Graphics.FromImage(bufferBitmap)
+        End If
+        If boxGraphics Is Nothing Then
+            boxGraphics = box.CreateGraphics()
+        End If
 
-            ' border
-            g.DrawRectangle(
+        bufferGraphics.Clear(Color.Transparent)
+
+        ' border
+        bufferGraphics.DrawRectangle(
                 New Pen(Color.Red),
                 New Rectangle(0, 0, box.Width - 1, box.Height - 1)
             )
 
-            Dim appleRect As New Rectangle(
+        Dim appleRect As New Rectangle(
                 Math.Floor(Game.ApplePosition.X * renderScale + marg),
                 Math.Floor(Game.ApplePosition.Y * renderScale + marg),
                 Math.Ceiling((1 - (CellMargin * 2)) * renderScale),
                 Math.Ceiling((1 - (CellMargin * 2)) * renderScale)
             )
-            g.FillEllipse(appleColor, appleRect)
+        bufferGraphics.FillEllipse(appleColor, appleRect)
 
-            For i = 0 To Game.SnakeCells.Count - 1
-                Dim cell As Position = Game.SnakeCells(i)
-                Dim initialRect As New Rectangle(
+        For i = 0 To Game.SnakeCells.Count - 1
+            Dim cell As Position = Game.SnakeCells(i)
+            Dim initialRect As New Rectangle(
                     marg + cell.X * renderScale,
                     marg + cell.Y * renderScale,
                     renderScale - (CellMargin * 2) * renderScale,
                     renderScale - (CellMargin * 2) * renderScale
                 )
-                Dim rects As New List(Of Rectangle)
+            Dim rects As New List(Of Rectangle)
 
-                If i > 0 Then
-                    rects = AddNeighborCellRectangle(cell, Game.SnakeCells(i - 1), initialRect, rects)
-                ElseIf Game.SnakeCells.Count > 1 Then
-                    rects = AddNeighborEndCellRectangle(cell, Game.SnakeCells(1), initialRect, rects)
-                End If
+            If i > 0 Then
+                rects = AddNeighborCellRectangle(cell, Game.SnakeCells(i - 1), initialRect, rects)
+            ElseIf Game.SnakeCells.Count > 1 Then
+                rects = AddNeighborEndCellRectangle(cell, Game.SnakeCells(1), initialRect, rects)
+            End If
 
-                If i < Game.SnakeCells.Count - 1 Then
-                    rects = AddNeighborCellRectangle(cell, Game.SnakeCells(i + 1), initialRect, rects)
-                ElseIf Game.SnakeCells.Count > 1 Then
-                    rects = AddNeighborEndCellRectangle(cell, Game.SnakeCells(i - 1), initialRect, rects)
-                End If
+            If i < Game.SnakeCells.Count - 1 Then
+                rects = AddNeighborCellRectangle(cell, Game.SnakeCells(i + 1), initialRect, rects)
+            ElseIf Game.SnakeCells.Count > 1 Then
+                rects = AddNeighborEndCellRectangle(cell, Game.SnakeCells(i - 1), initialRect, rects)
+            End If
 
-                For Each rect In rects
-                    g.FillRectangle(snakeColor, rect)
-                Next
-
-                g.FillEllipse(snakeColor, initialRect)
-
-                If i = Game.SnakeCells.Count - 1 And Not Game.SnakeAlive And Not Game.SnakeWin Then
-                    g.FillEllipse(snakeDeadColor, initialRect)
-                End If
+            For Each rect In rects
+                bufferGraphics.FillRectangle(snakeColor, rect)
             Next
-        End Using
+
+            bufferGraphics.FillEllipse(snakeColor, initialRect)
+
+            If i = Game.SnakeCells.Count - 1 And Not Game.SnakeAlive And Not Game.SnakeWin Then
+                bufferGraphics.FillEllipse(snakeDeadColor, initialRect)
+            End If
+        Next
+
+        boxGraphics.Clear(box.BackColor)
+        boxGraphics.DrawImage(bufferBitmap, 0, 0)
     End Sub
 
     Private Sub UpdateButtons()
@@ -238,6 +261,13 @@ Public Class SnakeForm
         End If
     End Sub
 
+    Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
+        If HandleKeyDown(keyData) Then
+            Return True
+        End If
+        Return MyBase.ProcessCmdKey(msg, keyData)
+    End Function
+
     Private Sub SnakeForm_PreviewKeyDown(sender As Object, e As PreviewKeyDownEventArgs) Handles MyBase.PreviewKeyDown
         If HandleKeyDown(e.KeyCode) Then
             e.IsInputKey = False
@@ -247,26 +277,21 @@ Public Class SnakeForm
     Private Function HandleKeyDown(keyCode As Keys) As Boolean
         Dim dir As Direction = Direction.None
         Select Case keyCode
-            Case 27, 13, 80
-                GoTo KeyPause
-            Case 65, 70, 74
+            Case Keys.Escape, Keys.P, Keys.Enter, Keys.Space
+                TogglePause()
+                Return True
+            Case Keys.A, Keys.F, Keys.J, Keys.Left
                 dir = Direction.Left
-            Case 87, 84, 73
+            Case Keys.W, Keys.T, Keys.I, Keys.Up
                 dir = Direction.Up
-            Case 68, 72, 76
+            Case Keys.D, Keys.H, Keys.L, Keys.Right
                 dir = Direction.Right
-            Case 83, 71, 75
+            Case Keys.S, Keys.G, Keys.K, Keys.Down
                 dir = Direction.Down
                 Exit Select
             Case Else
                 Return False
         End Select
-
-        If False Then
-KeyPause:
-            TogglePause()
-            Return True
-        End If
 
         Return HandleMove(dir)
     End Function
@@ -282,12 +307,13 @@ KeyPause:
 
         If changeDirectionQueue.Count < 3 Then
             If Game.SnakeLength > 1 Then
+                ' don't allow turning back, or turning in the current direction
                 If changeDirectionQueue.Count = 0 Then
-                    If IsOppositeDirection(dir, Game.SnakeDirection) Then
+                    If IsDirectionSameAxis(dir, Game.SnakeDirection) Then
                         GoTo skipAddQueue
                     End If
                 Else
-                    If IsOppositeDirection(dir, changeDirectionQueue.Last()) Then
+                    If IsDirectionSameAxis(dir, changeDirectionQueue.Last()) Then
                         GoTo skipAddQueue
                     End If
                 End If
