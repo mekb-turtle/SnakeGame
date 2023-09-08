@@ -1,4 +1,4 @@
-﻿Public Class SnakeGameUtils
+﻿Public Module SnakeGameUtils
     Public Enum Direction
         None
         Left
@@ -7,7 +7,7 @@
         Down
     End Enum
 
-    Public Shared Function IsOppositeDirection(a As Direction, b As Direction) As Boolean
+    Public Function IsOppositeDirection(a As Direction, b As Direction) As Boolean
         If a = Direction.Left And b = Direction.Right Then
             Return True
         ElseIf a = Direction.Up And b = Direction.Down Then
@@ -20,7 +20,7 @@
         Return False
     End Function
 
-    Public Shared Function IsDirectionSameAxis(a As Direction, b As Direction) As Boolean
+    Public Function IsDirectionSameAxis(a As Direction, b As Direction) As Boolean
         Return a = b Or IsOppositeDirection(a, b)
     End Function
 
@@ -84,4 +84,4 @@
             Return A.X <> B.X Or A.Y <> B.Y
         End Operator
     End Class
-End Class
+End Module
