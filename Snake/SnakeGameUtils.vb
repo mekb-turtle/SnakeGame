@@ -20,6 +20,10 @@
         Return False
     End Function
 
+    Public Shared Function IsDirectionSameAxis(a As Direction, b As Direction) As Boolean
+        Return a = b Or IsOppositeDirection(a, b)
+    End Function
+
     Public Class Position
         Public X As Integer = 0
         Public Y As Integer = 0
