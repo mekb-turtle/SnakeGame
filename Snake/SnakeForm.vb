@@ -85,6 +85,9 @@ Public Class SnakeForm
         bufferGraphics?.Dispose()
         bufferBitmap?.Dispose()
         boxGraphics?.Dispose()
+        bufferGraphics = Nothing
+        bufferBitmap = Nothing
+        boxGraphics = Nothing
     End Sub
 
     Private Sub box_Paint(sender As Object, e As PaintEventArgs) Handles box.Paint
