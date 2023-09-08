@@ -29,6 +29,7 @@ Partial Class SnakeForm
         Me.gameOverText = New System.Windows.Forms.Label()
         Me.winText = New System.Windows.Forms.Label()
         Me.mainPanel = New System.Windows.Forms.Panel()
+        Me.algorithmCheckbox = New System.Windows.Forms.CheckBox()
         Me.numericHeight = New System.Windows.Forms.NumericUpDown()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -53,7 +54,7 @@ Partial Class SnakeForm
         Me.startButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
         Me.startButton.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
         Me.startButton.Location = New System.Drawing.Point(232, 125)
-        Me.startButton.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.startButton.Margin = New System.Windows.Forms.Padding(2)
         Me.startButton.Name = "startButton"
         Me.startButton.Size = New System.Drawing.Size(75, 31)
         Me.startButton.TabIndex = 1
@@ -89,23 +90,33 @@ Partial Class SnakeForm
         'mainPanel
         '
         Me.mainPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.mainPanel.Controls.Add(Me.algorithmCheckbox)
         Me.mainPanel.Controls.Add(Me.numericHeight)
         Me.mainPanel.Controls.Add(Me.Label2)
         Me.mainPanel.Controls.Add(Me.Label1)
         Me.mainPanel.Controls.Add(Me.numericWidth)
         Me.mainPanel.ForeColor = System.Drawing.Color.Transparent
         Me.mainPanel.Location = New System.Drawing.Point(209, 170)
-        Me.mainPanel.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.mainPanel.Margin = New System.Windows.Forms.Padding(2)
         Me.mainPanel.Name = "mainPanel"
-        Me.mainPanel.Size = New System.Drawing.Size(131, 41)
+        Me.mainPanel.Size = New System.Drawing.Size(131, 64)
         Me.mainPanel.TabIndex = 4
+        '
+        'algorithmCheckbox
+        '
+        Me.algorithmCheckbox.Location = New System.Drawing.Point(3, 37)
+        Me.algorithmCheckbox.Name = "algorithmCheckbox"
+        Me.algorithmCheckbox.Size = New System.Drawing.Size(125, 24)
+        Me.algorithmCheckbox.TabIndex = 6
+        Me.algorithmCheckbox.Text = "Algorithm"
+        Me.algorithmCheckbox.UseVisualStyleBackColor = True
         '
         'numericHeight
         '
         Me.numericHeight.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
         Me.numericHeight.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
         Me.numericHeight.Location = New System.Drawing.Point(91, 12)
-        Me.numericHeight.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.numericHeight.Margin = New System.Windows.Forms.Padding(2)
         Me.numericHeight.Name = "numericHeight"
         Me.numericHeight.Size = New System.Drawing.Size(37, 20)
         Me.numericHeight.TabIndex = 5
@@ -139,7 +150,7 @@ Partial Class SnakeForm
         Me.numericWidth.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
         Me.numericWidth.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
         Me.numericWidth.Location = New System.Drawing.Point(35, 12)
-        Me.numericWidth.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.numericWidth.Margin = New System.Windows.Forms.Padding(2)
         Me.numericWidth.Name = "numericWidth"
         Me.numericWidth.Size = New System.Drawing.Size(37, 20)
         Me.numericWidth.TabIndex = 2
@@ -149,7 +160,7 @@ Partial Class SnakeForm
         Me.resumeButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
         Me.resumeButton.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
         Me.resumeButton.Location = New System.Drawing.Point(331, 125)
-        Me.resumeButton.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.resumeButton.Margin = New System.Windows.Forms.Padding(2)
         Me.resumeButton.Name = "resumeButton"
         Me.resumeButton.Size = New System.Drawing.Size(75, 31)
         Me.resumeButton.TabIndex = 5
@@ -175,8 +186,8 @@ Partial Class SnakeForm
         Me.pauseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pauseButton.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
         Me.pauseButton.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
-        Me.pauseButton.Location = New System.Drawing.Point(436, 8)
-        Me.pauseButton.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.pauseButton.Location = New System.Drawing.Point(541, 8)
+        Me.pauseButton.Margin = New System.Windows.Forms.Padding(2)
         Me.pauseButton.Name = "pauseButton"
         Me.pauseButton.Size = New System.Drawing.Size(75, 31)
         Me.pauseButton.TabIndex = 7
@@ -203,7 +214,7 @@ Partial Class SnakeForm
         Me.box.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(46, Byte), Integer))
         Me.box.ErrorImage = Nothing
         Me.box.Location = New System.Drawing.Point(122, 75)
-        Me.box.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
+        Me.box.Margin = New System.Windows.Forms.Padding(2)
         Me.box.Name = "box"
         Me.box.Size = New System.Drawing.Size(67, 32)
         Me.box.TabIndex = 9
@@ -214,7 +225,7 @@ Partial Class SnakeForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer), CType(CType(27, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(519, 256)
+        Me.ClientSize = New System.Drawing.Size(624, 321)
         Me.Controls.Add(Me.scoreText)
         Me.Controls.Add(Me.pauseButton)
         Me.Controls.Add(Me.resumeButton)
@@ -227,8 +238,8 @@ Partial Class SnakeForm
         Me.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
-        Me.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
-        Me.MinimumSize = New System.Drawing.Size(268, 164)
+        Me.Margin = New System.Windows.Forms.Padding(2)
+        Me.MinimumSize = New System.Drawing.Size(400, 300)
         Me.Name = "SnakeForm"
         Me.Text = "Snake"
         Me.mainPanel.ResumeLayout(False)
@@ -254,4 +265,5 @@ Partial Class SnakeForm
     Friend WithEvents pauseButton As Button
     Friend WithEvents scoreText As Label
     Friend WithEvents box As GraphicsControl
+    Friend WithEvents algorithmCheckbox As CheckBox
 End Class

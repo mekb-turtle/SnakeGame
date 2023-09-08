@@ -1,4 +1,5 @@
-﻿Imports Snake.SnakeGameUtils
+﻿Imports System.Drawing.Drawing2D
+Imports Snake.SnakeGameUtils
 
 Public Class SnakeForm
     Dim Game As New SnakeGame(16, 16)
@@ -17,32 +18,28 @@ Public Class SnakeForm
 
     Private Const CellMargin As Single = 0.1
 
-    Private snakeColor As New SolidBrush(ColorTranslator.FromHtml("#a6e3a1"))
-    Private appleColor As New SolidBrush(ColorTranslator.FromHtml("#f38ba8"))
-    Private snakeDeadColor As SolidBrush = appleColor
-
     Private Function AddNeighborCellRectangle(cell As Position, otherCell As Position, rect As Rectangle, rects As List(Of Rectangle)) As List(Of Rectangle)
         Dim marg As Single = CellMargin * renderScale
 
         If otherCell + Position.FromDirection(Direction.Right) = cell Then
             rects.Add(New Rectangle(
-                rect.X - marg, rect.Y,
-                renderScale * 0.5, rect.Height + 1
+                rect.X - marg - renderScale * 0.25, rect.Y,
+                renderScale * 0.75, rect.Height
             ))
         ElseIf otherCell + Position.FromDirection(Direction.Down) = cell Then
             rects.Add(New Rectangle(
-                rect.X, rect.Y - marg,
-                rect.Width + 1, renderScale * 0.5
+                rect.X, rect.Y - marg - renderScale * 0.25,
+                rect.Width, renderScale * 0.75
             ))
         ElseIf otherCell + Position.FromDirection(Direction.Left) = cell Then
             rects.Add(New Rectangle(
                 rect.X - marg + renderScale * 0.5, rect.Y,
-                renderScale * 0.5 + 1, rect.Height + 1
+                renderScale * 0.75, rect.Height
             ))
         ElseIf otherCell + Position.FromDirection(Direction.Up) = cell Then
             rects.Add(New Rectangle(
                 rect.X, rect.Y - marg + renderScale * 0.5,
-                rect.Width + 1, renderScale * 0.5 + 1
+                rect.Width, renderScale * 0.75
             ))
         End If
 
@@ -90,6 +87,13 @@ Public Class SnakeForm
         boxGraphics = Nothing
     End Sub
 
+    Private snakeColor As New SolidBrush(ColorTranslator.FromHtml("#a6e3a1"))
+    Private appleColor As New SolidBrush(ColorTranslator.FromHtml("#f38ba8"))
+    Private snakeDeadColor As SolidBrush = appleColor
+
+    Private appleRoundedRadius As Single = 1
+    Private snakeRoundedRadius As Single = 0.5
+
     Private Sub box_Paint(sender As Object, e As PaintEventArgs) Handles box.Paint
         Dim marg As Single = CellMargin * renderScale
 
@@ -105,15 +109,16 @@ Public Class SnakeForm
             boxGraphics = box.CreateGraphics()
         End If
 
+        bufferGraphics.SmoothingMode = SmoothingMode.AntiAlias
         bufferGraphics.Clear(Color.Transparent)
 
         Dim appleRect As New Rectangle(
-                Math.Floor(Game.ApplePosition.X * renderScale + marg),
-                Math.Floor(Game.ApplePosition.Y * renderScale + marg),
-                Math.Ceiling((1 - (CellMargin * 2)) * renderScale),
-                Math.Ceiling((1 - (CellMargin * 2)) * renderScale)
-            )
-        bufferGraphics.FillEllipse(appleColor, appleRect)
+            Math.Floor(Game.ApplePosition.X * renderScale + marg),
+            Math.Floor(Game.ApplePosition.Y * renderScale + marg),
+            Math.Ceiling((1 - (CellMargin * 2)) * renderScale),
+            Math.Ceiling((1 - (CellMargin * 2)) * renderScale)
+        )
+        bufferGraphics.FillRoundedRectangle(appleColor, appleRect, renderScale * appleRoundedRadius)
 
         For i = 0 To Game.SnakeCells.Count - 1
             Dim cell As Position = Game.SnakeCells(i)
@@ -141,10 +146,10 @@ Public Class SnakeForm
                 bufferGraphics.FillRectangle(snakeColor, rect)
             Next
 
-            bufferGraphics.FillEllipse(snakeColor, initialRect)
+            bufferGraphics.FillRoundedRectangle(snakeColor, initialRect, renderScale * snakeRoundedRadius)
 
             If i = Game.SnakeCells.Count - 1 And Not Game.SnakeAlive And Not Game.SnakeWin Then
-                bufferGraphics.FillEllipse(snakeDeadColor, initialRect)
+                bufferGraphics.FillRoundedRectangle(snakeDeadColor, initialRect, renderScale * snakeRoundedRadius)
             End If
         Next
 
@@ -209,7 +214,14 @@ Public Class SnakeForm
         UpdateBox()
     End Sub
 
+    Private timerTick As Boolean = False
+
     Private Sub gameTimer_Tick(sender As Object, e As EventArgs) Handles gameTimer.Tick
+        If timerTick Then
+            Return
+        End If
+        timerTick = True
+
         If Game.SnakeAlive Then
             If changeDirectionQueue.Count > 0 Then
                 Game.SnakeDirection = changeDirectionQueue(0)
@@ -225,6 +237,8 @@ Public Class SnakeForm
         If Not Game.SnakeAlive Then
             StopGame()
         End If
+
+        timerTick = False
     End Sub
 
     Private Sub UpdateScore()
@@ -253,6 +267,7 @@ Public Class SnakeForm
             changeDirectionQueue.Clear()
             Paused = True
             gameTimer.Stop()
+            timerTick = False
             SetMenuVisible(False)
             resumeButton.Focus()
         End If
@@ -294,7 +309,7 @@ Public Class SnakeForm
     End Function
 
     Private Function HandleMove(dir As Direction) As Boolean
-        If dir = Direction.None Then
+        If dir = Direction.None Or algorithm Then
             Return False
         End If
 
@@ -323,6 +338,7 @@ skipAddQueue:
     End Function
 
     Private firstStarted As Boolean = False
+    Private algorithm As Boolean = False
 
     Private Sub SetMenuVisible(menu As Boolean)
         resumeButton.Visible = Paused
@@ -338,6 +354,8 @@ skipAddQueue:
         pauseButton.Visible = Not menu And Not Paused
         pauseButton.Enabled = pauseButton.Visible
         scoreText.Visible = Not menu
+        algorithmCheckbox.Visible = menu
+        algorithmCheckbox.Enabled = menu
 
         If menu Then
             startButton.Focus()
@@ -350,6 +368,7 @@ skipAddQueue:
     Private Sub StopGame()
         changeDirectionQueue.Clear()
         gameTimer.Stop()
+        timerTick = False
         SetMenuVisible(True)
         Paused = False
     End Sub
@@ -414,15 +433,7 @@ skipAddQueue:
         e.SuppressKeyPress = True
     End Sub
 
-    Private Sub scoreText_Click(sender As Object, e As EventArgs) Handles scoreText.Click
-
-    End Sub
-
-    Private Sub Label1_Click(sender As Object, e As EventArgs) Handles Label1.Click
-
-    End Sub
-
-    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
-
+    Private Sub algorithmCheckbox_CheckedChanged(sender As Object, e As EventArgs) Handles algorithmCheckbox.CheckedChanged
+        algorithm = True
     End Sub
 End Class
