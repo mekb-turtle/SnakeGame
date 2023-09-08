@@ -17,9 +17,9 @@ Public Class SnakeForm
 
     Private Const CellMargin As Single = 0.1
 
-    Private snakeColor As New SolidBrush(Color.LimeGreen)
-    Private snakeDeadColor As New SolidBrush(Color.Red)
-    Private appleColor As New SolidBrush(Color.Red)
+    Private snakeColor As New SolidBrush(ColorTranslator.FromHtml("#a6e3a1"))
+    Private appleColor As New SolidBrush(ColorTranslator.FromHtml("#f38ba8"))
+    Private snakeDeadColor As SolidBrush = appleColor
 
     Private Function AddNeighborCellRectangle(cell As Position, otherCell As Position, rect As Rectangle, rects As List(Of Rectangle)) As List(Of Rectangle)
         Dim marg As Single = CellMargin * renderScale
@@ -103,12 +103,6 @@ Public Class SnakeForm
         End If
 
         bufferGraphics.Clear(Color.Transparent)
-
-        ' border
-        bufferGraphics.DrawRectangle(
-                New Pen(Color.Red),
-                New Rectangle(0, 0, box.Width - 1, box.Height - 1)
-            )
 
         Dim appleRect As New Rectangle(
                 Math.Floor(Game.ApplePosition.X * renderScale + marg),
@@ -415,5 +409,17 @@ skipAddQueue:
     Private Sub pauseButton_KeyDown(sender As Object, e As KeyEventArgs) Handles pauseButton.KeyDown
         HandleKeyDown(e.KeyCode)
         e.SuppressKeyPress = True
+    End Sub
+
+    Private Sub scoreText_Click(sender As Object, e As EventArgs) Handles scoreText.Click
+
+    End Sub
+
+    Private Sub Label1_Click(sender As Object, e As EventArgs) Handles Label1.Click
+
+    End Sub
+
+    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
+
     End Sub
 End Class
