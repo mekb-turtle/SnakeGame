@@ -91,6 +91,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RenderUtils.vb" />
+    <Compile Include="SnakeAlgorithm.vb" />
     <Compile Include="SnakeForm.vb">
       <SubType>Form</SubType>
     </Compile>

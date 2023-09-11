@@ -10,8 +10,9 @@ Public Class SnakeGame
     Public SnakeAlive As Boolean = True
     Public SnakeWin As Boolean = False
     Public ApplePosition As Position
+    Public SnakeSteps As Integer
 
-    Private rng As New Random(Guid.NewGuid().GetHashCode())
+    Public rng As New Random(Guid.NewGuid().GetHashCode())
 
     Public Sub New(X As Integer, Y As Integer)
         GameSize = New Position(X, Y)
@@ -39,6 +40,7 @@ Public Class SnakeGame
         SnakeWin = False
         SnakeCells.Clear()
         SnakeCells.Add(SnakePosition)
+        SnakeSteps = 0
     End Sub
 
     Public Function MoveApple() As Boolean
@@ -63,7 +65,7 @@ skipAddRandomPosition:
         Return True
     End Function
 
-    Private Function OutOfBounds(pos As Position) As Boolean
+    Public Function OutOfBounds(pos As Position) As Boolean
         Return pos.X < 0 Or pos.Y < 0 Or pos.X >= GameSize.X Or pos.Y >= GameSize.Y
     End Function
 
@@ -76,7 +78,9 @@ skipAddRandomPosition:
             Return
         End If
 
-        SnakePosition += Position.FromDirection(SnakeDirection)
+        SnakeSteps += 1
+
+        SnakePosition = SnakePosition.Add(SnakeDirection)
 
         If OutOfBounds(SnakePosition) Then
             SnakeAlive = False
@@ -85,15 +89,15 @@ skipAddRandomPosition:
 
         Dim crash As Boolean = False
         Dim apple As Boolean = False
-        For i = 1 To SnakeCells.Count - 1
-            If SnakeCells(i) = SnakePosition Then
+        For i = If(SnakeLength > SnakeCells.Count, 0, 1) To SnakeCells.Count - 1
+            If SnakeCells(i).Equals(SnakePosition) Then
                 crash = True
             End If
         Next
 
         SnakeCells.Add(SnakePosition)
 
-        If SnakePosition = ApplePosition And Not crash Then
+        If SnakePosition.Equals(ApplePosition) And Not crash Then
             SnakeLength += 1
             apple = True
         End If

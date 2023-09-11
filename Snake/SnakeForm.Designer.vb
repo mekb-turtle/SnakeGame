@@ -29,6 +29,9 @@ Partial Class SnakeForm
         Me.gameOverText = New System.Windows.Forms.Label()
         Me.winText = New System.Windows.Forms.Label()
         Me.mainPanel = New System.Windows.Forms.Panel()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.numericSpeed = New System.Windows.Forms.NumericUpDown()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.algorithmCheckbox = New System.Windows.Forms.CheckBox()
         Me.numericHeight = New System.Windows.Forms.NumericUpDown()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -38,8 +41,10 @@ Partial Class SnakeForm
         Me.pausedText = New System.Windows.Forms.Label()
         Me.pauseButton = New System.Windows.Forms.Button()
         Me.scoreText = New System.Windows.Forms.Label()
+        Me.stepsText = New System.Windows.Forms.Label()
         Me.box = New Snake.GraphicsControl()
         Me.mainPanel.SuspendLayout()
+        CType(Me.numericSpeed, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numericHeight, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.numericWidth, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.box, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -90,6 +95,9 @@ Partial Class SnakeForm
         'mainPanel
         '
         Me.mainPanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.mainPanel.Controls.Add(Me.Label4)
+        Me.mainPanel.Controls.Add(Me.numericSpeed)
+        Me.mainPanel.Controls.Add(Me.Label3)
         Me.mainPanel.Controls.Add(Me.algorithmCheckbox)
         Me.mainPanel.Controls.Add(Me.numericHeight)
         Me.mainPanel.Controls.Add(Me.Label2)
@@ -99,14 +107,52 @@ Partial Class SnakeForm
         Me.mainPanel.Location = New System.Drawing.Point(209, 170)
         Me.mainPanel.Margin = New System.Windows.Forms.Padding(2)
         Me.mainPanel.Name = "mainPanel"
-        Me.mainPanel.Size = New System.Drawing.Size(131, 64)
+        Me.mainPanel.Size = New System.Drawing.Size(181, 86)
         Me.mainPanel.TabIndex = 4
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.Label4.Location = New System.Drawing.Point(102, 38)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(51, 13)
+        Me.Label4.TabIndex = 9
+        Me.Label4.Text = "(ms/step)"
+        '
+        'numericSpeed
+        '
+        Me.numericSpeed.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.numericSpeed.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.numericSpeed.Location = New System.Drawing.Point(47, 36)
+        Me.numericSpeed.Margin = New System.Windows.Forms.Padding(2)
+        Me.numericSpeed.Maximum = New Decimal(New Integer() {1000, 0, 0, 0})
+        Me.numericSpeed.Minimum = New Decimal(New Integer() {20, 0, 0, 0})
+        Me.numericSpeed.Name = "numericSpeed"
+        Me.numericSpeed.Size = New System.Drawing.Size(51, 20)
+        Me.numericSpeed.TabIndex = 8
+        Me.numericSpeed.Value = New Decimal(New Integer() {300, 0, 0, 0})
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.Label3.Location = New System.Drawing.Point(2, 38)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(41, 13)
+        Me.Label3.TabIndex = 7
+        Me.Label3.Text = "Speed:"
         '
         'algorithmCheckbox
         '
-        Me.algorithmCheckbox.Location = New System.Drawing.Point(3, 37)
+        Me.algorithmCheckbox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.algorithmCheckbox.Location = New System.Drawing.Point(5, 59)
         Me.algorithmCheckbox.Name = "algorithmCheckbox"
-        Me.algorithmCheckbox.Size = New System.Drawing.Size(125, 24)
+        Me.algorithmCheckbox.Size = New System.Drawing.Size(131, 24)
         Me.algorithmCheckbox.TabIndex = 6
         Me.algorithmCheckbox.Text = "Algorithm"
         Me.algorithmCheckbox.UseVisualStyleBackColor = True
@@ -200,7 +246,7 @@ Partial Class SnakeForm
         Me.scoreText.AutoSize = True
         Me.scoreText.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
         Me.scoreText.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
-        Me.scoreText.Location = New System.Drawing.Point(8, 6)
+        Me.scoreText.Location = New System.Drawing.Point(11, 9)
         Me.scoreText.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.scoreText.Name = "scoreText"
         Me.scoreText.Size = New System.Drawing.Size(33, 13)
@@ -208,6 +254,20 @@ Partial Class SnakeForm
         Me.scoreText.Text = "score"
         Me.scoreText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.scoreText.Visible = False
+        '
+        'stepsText
+        '
+        Me.stepsText.AutoSize = True
+        Me.stepsText.BackColor = System.Drawing.Color.FromArgb(CType(CType(49, Byte), Integer), CType(CType(50, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.stepsText.ForeColor = System.Drawing.Color.FromArgb(CType(CType(205, Byte), Integer), CType(CType(214, Byte), Integer), CType(CType(244, Byte), Integer))
+        Me.stepsText.Location = New System.Drawing.Point(11, 26)
+        Me.stepsText.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.stepsText.Name = "stepsText"
+        Me.stepsText.Size = New System.Drawing.Size(32, 13)
+        Me.stepsText.TabIndex = 10
+        Me.stepsText.Text = "steps"
+        Me.stepsText.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.stepsText.Visible = False
         '
         'box
         '
@@ -226,6 +286,7 @@ Partial Class SnakeForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer), CType(CType(27, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(624, 321)
+        Me.Controls.Add(Me.stepsText)
         Me.Controls.Add(Me.scoreText)
         Me.Controls.Add(Me.pauseButton)
         Me.Controls.Add(Me.resumeButton)
@@ -244,6 +305,7 @@ Partial Class SnakeForm
         Me.Text = "Snake"
         Me.mainPanel.ResumeLayout(False)
         Me.mainPanel.PerformLayout()
+        CType(Me.numericSpeed, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numericHeight, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.numericWidth, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.box, System.ComponentModel.ISupportInitialize).EndInit()
@@ -266,4 +328,8 @@ Partial Class SnakeForm
     Friend WithEvents scoreText As Label
     Friend WithEvents box As GraphicsControl
     Friend WithEvents algorithmCheckbox As CheckBox
+    Friend WithEvents stepsText As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents numericSpeed As NumericUpDown
+    Friend WithEvents Label4 As Label
 End Class
