@@ -413,6 +413,7 @@ skipAddQueue:
     End Sub
 
     Private Sub UpdateSize()
+		pathFindingResult = Nothing
         Game.SetSize(numericWidth.Value, numericHeight.Value)
         UpdateBox()
     End Sub
@@ -426,6 +427,7 @@ skipAddQueue:
 
         UpdateBox()
         If firstStarted Then
+			pathFindingResult = Nothing
             Game.Restart()
             Game.MoveApple()
         End If

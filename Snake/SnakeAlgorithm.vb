@@ -188,6 +188,7 @@
         OpenList.Add(New NodeWithCells(StartPosition, Game.SnakeCells))
 
         While OpenList.Count > 0
+			OpenList.Sort(Comparer(Of Node).Create(Function(a As Node, b As Node) a.Direction.CompareTo(b.Direction)))
             OpenList.Sort()
 
             Dim CurrentNode As NodeWithCells = OpenList(0)
