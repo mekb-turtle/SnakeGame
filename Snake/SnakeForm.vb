@@ -72,19 +72,6 @@ Public Class SnakeForm
 
     Private renderScale As Single
 
-    Private bufferGraphics As Graphics
-    Private bufferBitmap As Bitmap
-    Private boxGraphics As Graphics
-
-    Private Sub box_SizeChanged(sender As Object, e As EventArgs) Handles box.SizeChanged
-        bufferGraphics?.Dispose()
-        bufferBitmap?.Dispose()
-        boxGraphics?.Dispose()
-        bufferGraphics = Nothing
-        bufferBitmap = Nothing
-        boxGraphics = Nothing
-    End Sub
-
     Private Function getCellRectangle(cell As Position, cellMargin As Single) As Rectangle
         If cell Is Nothing Then Return Nothing
         Return New Rectangle(
@@ -95,7 +82,7 @@ Public Class SnakeForm
                 )
     End Function
 
-    Private Sub renderPath(path As List(Of Position), color As Brush, cellMargin As Single, roundedRadius As Single)
+    Private Sub renderPath(graphics As Graphics, path As List(Of Position), color As Brush, cellMargin As Single, roundedRadius As Single)
         If path Is Nothing Then Return
         For i = 0 To path.Count - 1
             Dim cell As Position = path(i)
@@ -115,10 +102,10 @@ Public Class SnakeForm
             End If
 
             For Each rect In rects
-                bufferGraphics.FillRectangle(color, rect)
+                graphics.FillRectangle(color, rect)
             Next
 
-            bufferGraphics.FillRoundedRectangle(color, initialRect, renderScale * roundedRadius)
+            graphics.FillRoundedRectangle(color, initialRect, renderScale * roundedRadius)
 
         Next
     End Sub
@@ -139,29 +126,17 @@ Public Class SnakeForm
     Private Const pathFindingCellMargin As Single = 0.3
 
     Private Sub box_Paint(sender As Object, e As PaintEventArgs) Handles box.Paint
-        If bufferBitmap Is Nothing Then
-            bufferBitmap = New Bitmap(box.ClientSize.Width, box.ClientSize.Height)
-        Else
-            boxGraphics.DrawImage(bufferBitmap, 0, 0)
-        End If
-        If bufferGraphics Is Nothing Then
-            bufferGraphics = Graphics.FromImage(bufferBitmap)
-        End If
-        If boxGraphics Is Nothing Then
-            boxGraphics = box.CreateGraphics()
-        End If
-
-        bufferGraphics.SmoothingMode = SmoothingMode.AntiAlias
-        bufferGraphics.Clear(Color.Transparent)
+        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias
+        e.Graphics.Clear(box.BackColor)
 
         If algorithmEnabled And pathFindingResult?.FoundPath Then
-            renderPath(pathFindingResult.Path, pathFindingColor, pathFindingCellMargin, pathFindingRoundedRadius)
+            renderPath(e.Graphics, pathFindingResult.Path, pathFindingColor, pathFindingCellMargin, pathFindingRoundedRadius)
         End If
 
-        renderPath(Game.SnakeCells, snakeColor, snakeCellMargin, snakeRoundedRadius)
+        renderPath(e.Graphics, Game.SnakeCells, snakeColor, snakeCellMargin, snakeRoundedRadius)
 
         Dim appleRect As Rectangle = getCellRectangle(Game.ApplePosition, appleCellMargin)
-        bufferGraphics.FillRoundedRectangle(appleColor, appleRect, renderScale * appleRoundedRadius)
+        e.Graphics.FillRoundedRectangle(appleColor, appleRect, renderScale * appleRoundedRadius)
 
         If Not Game.SnakeAlive And Not Game.SnakeWin Then
             Dim cell As Position = Game.SnakeCells.Last()
@@ -172,11 +147,8 @@ Public Class SnakeForm
                         renderScale - (snakeCellMargin * 2) * renderScale
                     )
 
-            bufferGraphics.FillRoundedRectangle(snakeDeadColor, initialRect, renderScale * snakeRoundedRadius)
+            e.Graphics.FillRoundedRectangle(snakeDeadColor, initialRect, renderScale * snakeRoundedRadius)
         End If
-
-        boxGraphics.Clear(box.BackColor)
-        boxGraphics.DrawImage(bufferBitmap, 0, 0)
     End Sub
 
     Private Sub UpdateButtons()

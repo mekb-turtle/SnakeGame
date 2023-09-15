@@ -2,7 +2,7 @@
     Inherits PictureBox
 
     Public Sub New()
-        DoubleBuffered = False
+        DoubleBuffered = True
     End Sub
 
     Protected Overrides Sub OnResize(e As EventArgs)
